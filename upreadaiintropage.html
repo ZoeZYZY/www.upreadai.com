@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpRead: Reading Beyond Translation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @layer base {
+          body {
+            @apply bg-[#faf6f1] text-stone-800 antialiased;
+            font-family: 'Noto Sans SC', sans-serif;
+          }
+          h1, h2, h3, h4 {
+            @apply font-serif;
+            font-family: 'Noto Serif SC', serif;
+          }
+        }
+        
+        .organic-texture {
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+        }
+        
+        :root {
+          --primary: #5c4033;
+          --secondary: #faf6f1;
+          --accent: #8b9d77;
+          --dark-shell: #0c1524;
+        }
+        
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+          background-color: #fffaf5;
+          border: 1px solid rgba(92, 64, 51, 0.1);
+          border-radius: 12px;
+          box-shadow: 0 4px 20px rgba(92, 64, 51, 0.05);
+          transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(92, 64, 51, 0.1);
+        }
+
+        .animate-in {
+          animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          opacity: 0;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        .nav-frosted {
+            backdrop-filter: blur(12px);
+            background: rgba(250, 246, 241, 0.8);
+            border-bottom: 1px solid rgba(92, 64, 51, 0.1);
+        }
+
+        .logo-box {
+            width: 40px;
+            height: 40px;
+            background: var(--dark-shell);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body class="organic-texture">
+
+    <!-- Chosen Palette: Natural Organic + Official Dark Shell -->
+    <!-- Application Structure Plan: 
+         1. Header: Accurate SVG recreation of the official shield logo. Defaulting to English.
+         2. Hero: High-impact redirection to upreadai.com.
+         3. Analysis: Visualizing focus depletion through Chart.js.
+         4. Redirect: Deep-dark block emphasizing official product launch.
+         5. Multi-language: Full state-based toggle (EN/ZH). Default: EN.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used (re-created path-based logo). NO Mermaid JS used. -->
+
+    <nav class="fixed w-full z-50 nav-frosted">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="logo-box">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 20V60C20 71.0457 28.9543 80 40 80H60C71.0457 80 80 71.0457 80 60V20H65V60C65 62.7614 62.7614 65 60 65H40C37.2386 65 35 62.7614 35 60V20H20Z" fill="white"/>
+                        <rect x="55" y="45" width="40" height="6" transform="rotate(-35 55 45)" fill="#0c1524"/>
+                        <text x="58" y="54" fill="white" font-family="Arial Black" font-size="6" transform="rotate(-35 58 54)" font-weight="900">UPREAD</text>
+                    </svg>
+                </div>
+                <div class="text-2xl font-bold font-serif text-[#5c4033] tracking-wider">UpRead</div>
+            </div>
+            <div class="flex items-center space-x-4 md:space-x-8">
+                <div class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="https://www.upreadai.com" target="_blank" class="text-[#8b9d77] font-bold hover:underline" data-i18n="navLive">Live Product</a>
+                    <a href="#problem" class="hover:text-[#8b9d77] transition-colors" data-i18n="navProblem">Insights</a>
+                    <a href="#tech" class="hover:text-[#8b9d77] transition-colors" data-i18n="navTech">Tech Shell</a>
+                </div>
+                <button id="langToggle" class="px-3 py-1 border border-[#5c4033] rounded-md text-xs font-bold hover:bg-[#5c4033] hover:text-white transition-all">
+                    中文 / English
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 px-6 min-h-[75vh] flex flex-col justify-center items-center text-center">
+        <div class="max-w-4xl mx-auto animate-in">
+            <div class="inline-block px-4 py-1 rounded-full border border-[#8b9d77] text-[#8b9d77] text-sm mb-6 bg-white/50" data-i18n="heroBadge">
+                Reading Beyond Translation
+            </div>
+            <h1 class="text-4xl md:text-7xl font-bold mb-8 leading-tight text-[#5c4033]" id="heroTitle">
+                It's Not Your Focus,<br>It's the <span class="text-[#8b9d77] italic">Interruption</span>.
+            </h1>
+            <p class="text-lg text-stone-600 mb-10 max-w-2xl mx-auto leading-relaxed" data-i18n="heroDesc">
+                Language isn't the hurdle—the cognitive load from switching apps is. UpRead unifies your path to stay in flow.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="https://www.upreadai.com" target="_blank" class="px-10 py-5 bg-[#5c4033] text-[#faf6f1] rounded-2xl text-xl font-bold hover:bg-[#3a2820] transition-all shadow-xl hover:shadow-2xl flex items-center gap-3 group">
+                    <span data-i18n="heroBtnLive">Try Official UpRead</span>
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+                <div class="text-stone-400 text-sm hidden sm:block" data-i18n="liveSlogan">Supports PDF / DOCX / EPUB</div>
+            </div>
+        </div>
+    </header>
+
+    <section id="problem" class="py-24 px-6 bg-white/40">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-6 animate-in">
+                    <h2 class="text-3xl font-bold text-[#5c4033]" data-i18n="theoryTitle">The Cognitive Load Trap</h2>
+                    <p class="text-lg text-stone-700 leading-relaxed" data-i18n="theoryDesc">
+                        As per Cognitive Load Theory: Every time you 'lookup—switch app—return', you drain your brain's processing capacity.
+                    </p>
+                    <div class="p-8 bg-[#faf6f1] border-l-4 border-[#5c4033] rounded-r-2xl shadow-sm">
+                        <p class="text-stone-600 italic leading-relaxed" data-i18n="quote">"What determines if you finish a book isn't the difficulty, it's your ability to remain in the reading state."</p>
+                    </div>
+                </div>
+
+                <div class="card p-8 animate-in">
+                    <h3 class="text-center font-bold text-[#5c4033] mb-6" data-i18n="chart1Title">Focus Depletion: Traditional vs UpRead</h3>
+                    <div class="chart-container">
+                        <canvas id="cognitiveChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 animate-in">
+                <h2 class="text-4xl font-bold text-[#5c4033] mb-4" data-i18n="techHeader">Behind the 'Vibe'</h2>
+                <p class="text-stone-600 max-w-2xl mx-auto" data-i18n="techSub">
+                    Building a tool that keeps you in focus requires heavy engineering. We invested 90% of effort into invisible infrastructure.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-8 text-center animate-in delay-100">
+                    <div class="text-3xl mb-4">⚙️</div>
+                    <h4 class="font-bold text-[#5c4033] mb-2" data-i18n="t1Title">Heavy Backend</h4>
+                    <p class="text-sm text-stone-600" data-i18n="t1Desc">Structure-aware parsing for PDF/EPUB ensures instant loading even for huge documents.</p>
+                </div>
+                <div class="card p-8 text-center animate-in delay-200">
+                    <div class="text-3xl mb-4">🤖</div>
+                    <h4 class="font-bold text-[#5c4033] mb-2" data-i18n="t2Title">Dual-Model Coding</h4>
+                    <p class="text-sm text-stone-600" data-i18n="t2Desc">Utilizing two independent LLMs to cross-verify logic for critical document stream handling.</p>
+                </div>
+                <div class="card p-8 text-center animate-in delay-300">
+                    <div class="text-3xl mb-4">🎯</div>
+                    <h4 class="font-bold text-[#5c4033] mb-2" data-i18n="t3Title">Unified Path</h4>
+                    <p class="text-sm text-stone-600" data-i18n="t3Desc">Combining lookup, notes, and understanding into one seamless on-page experience.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 max-w-lg mx-auto card p-8 animate-in">
+                <h3 class="text-center font-bold text-[#5c4033] mb-6" data-i18n="techEffortTitle">Actual Dev Effort Distribution</h3>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="effortChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6">
+        <div class="max-w-5xl mx-auto bg-[#0c1524] rounded-[2rem] p-12 text-white relative overflow-hidden animate-in">
+            <div class="absolute -right-10 -bottom-10 opacity-10 rotate-12">
+                <svg width="300" height="300" viewBox="0 0 100 100" fill="none">
+                    <path d="M20 20V60C20 71.0457 28.9543 80 40 80H60C71.0457 80 80 71.0457 80 60V20H65V60C65 62.7614 62.7614 65 60 65H40C37.2386 65 35 62.7614 35 60V20H20Z" fill="white"/>
+                </svg>
+            </div>
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6" data-i18n="ctaTitle">Full Experience at UpReadAI.com</h2>
+                <p class="text-stone-400 mb-10 max-w-xl" data-i18n="ctaDesc">Featuring Supabase sync, Stripe payments, and seamless reading across all your devices.</p>
+                <a href="https://www.upreadai.com" target="_blank" class="px-12 py-5 bg-white text-[#0c1524] rounded-2xl text-xl font-bold hover:bg-[#8b9d77] hover:text-white transition-all shadow-2xl">
+                    www.upreadai.com
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-stone-900 text-stone-500 py-16 text-center text-sm">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-center mb-6">
+                <div class="logo-box opacity-50 scale-75">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 20V60C20 71.0457 28.9543 80 40 80H60C71.0457 80 80 71.0457 80 60V20H65V60C65 62.7614 62.7614 65 60 65H40C37.2386 65 35 62.7614 35 60V20H20Z" fill="white"/>
+                        <rect x="55" y="45" width="40" height="6" transform="rotate(-35 55 45)" fill="#0c1524"/>
+                        <text x="58" y="54" fill="white" font-family="Arial Black" font-size="6" transform="rotate(-35 58 54)" font-weight="900">UPREAD</text>
+                    </svg>
+                </div>
+            </div>
+            <p data-i18n="footerTag">UpRead: Reading Beyond Translation.</p>
+            <div class="mt-10 pt-8 border-t border-stone-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex gap-6">
+                    <a href="https://www.upreadai.com" class="hover:text-white">Product</a>
+                    <a href="#problem" class="hover:text-white">Analysis</a>
+                    <a href="#tech" class="hover:text-white">Tech</a>
+                </div>
+                <p>&copy; 2024 UpRead Team.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const i18n = {
+            en: {
+                navLive: "Live Product",
+                navProblem: "Insights",
+                navTech: "Architecture",
+                heroBadge: "Reading Beyond Translation",
+                heroTitle: "It's Not Your Focus,<br>It's the <span class='text-[#8b9d77] italic'>Interruption</span>.",
+                heroDesc: "Language isn't the hurdle—the cognitive load from switching apps is. UpRead unifies your path to stay in flow.",
+                heroBtnLive: "Try Official UpRead",
+                liveSlogan: "Supports PDF / DOCX / EPUB",
+                theoryTitle: "The Cognitive Load Trap",
+                theoryDesc: "As per Cognitive Load Theory: Every time you 'lookup—switch app—return', you drain your brain's processing capacity.",
+                quote: "“What determines if you finish a book isn't the difficulty, but your ability to remain in the reading state.”",
+                chart1Title: "Focus Depletion: Traditional vs UpRead",
+                chart1Label1: "Traditional (Lookup/Switch)",
+                chart1Label2: "UpRead Unified Flow",
+                chartX: "Time (mins)",
+                chartY: "Focus",
+                techHeader: "Behind the 'Vibe'",
+                techSub: "Building a tool that keeps you in focus requires heavy engineering. We invested 90% of effort into invisible infrastructure.",
+                t1Title: "Heavy Backend",
+                t1Desc: "Structure-aware parsing for PDF/EPUB ensures instant loading even for huge documents.",
+                t2Title: "Dual-Model Coding",
+                t2Desc: "Utilizing two independent LLMs to cross-verify logic for critical document stream handling.",
+                t3Title: "Unified Path",
+                t3Desc: "Combining lookup, notes, and understanding into one seamless on-page experience.",
+                techEffortTitle: "Actual Dev Effort Distribution",
+                effort1: "Backend & Parsing",
+                effort2: "AI Logic Validation",
+                effort3: "UI/UX Polish",
+                ctaTitle: "Full Experience at UpReadAI.com",
+                ctaDesc: "Featuring Supabase sync, Stripe payments, and seamless reading across all your devices.",
+                footerTag: "UpRead: Reading Beyond Translation."
+            },
+            zh: {
+                navLive: "体验官网",
+                navProblem: "痛点分析",
+                navTech: "技术架构",
+                heroBadge: "Reading Beyond Translation",
+                heroTitle: "真正决定效率的，<br>是你能不能<span class='text-[#8b9d77] italic'>留在阅读里</span>。",
+                heroDesc: "同一本外文书带了三次出差还没读过百页？UpRead 致力于消除查词与翻译带来的“额外认知负担”。",
+                heroBtnLive: "立即访问官网体验",
+                liveSlogan: "正式版已上线，支持 PDF/DOCX/EPUB",
+                theoryTitle: "为什么读不下去？",
+                theoryDesc: "正如 John Sweller 的认知负荷理论：当你在阅读中不断经历“查词—切应用—再回来”时，消耗的不只是时间，而是大脑的专注上限。",
+                quote: "“真正决定你能不能读完一本书、一篇论文、或者一份文献的，不是内容到底有多难，而是你能不能一直留在阅读状态里。”",
+                chart1Title: "专注力损耗对比：传统 vs UpRead",
+                chart1Label1: "传统方式 (切屏查词)",
+                chart1Label2: "UpRead 统一路径",
+                chartX: "时间 (分)",
+                chartY: "专注度",
+                techHeader: "幕后的技术支撑",
+                techSub: "UpRead 的开发远没有 Vibe Coding 宣传的那么简单。为了实现轻盈的体验，我们在后端架构上投入了巨大精力。",
+                t1Title: "厚重的后端",
+                t1Desc: "深度解析文档结构，预构建采样缓存，确保大文件也能秒开。",
+                t2Title: "双模型协同",
+                t2Desc: "引入两个底层模型进行交叉验证，确保复杂逻辑的严丝合缝。",
+                t3Title: "阅读路径重塑",
+                t3Desc: "不仅仅是翻译，而是让用户“留在页面内”的统一化系统。",
+                techEffortTitle: "开发精力真实配比",
+                effort1: "后端与解析架构",
+                effort2: "AI 逻辑验证",
+                effort3: "UI/UX 交互磨合",
+                ctaTitle: "在 www.upreadai.com 开启沉浸之旅",
+                ctaDesc: "正式版已上线，支持云端同步、Stripe 支付以及多端无缝阅读。不仅仅是工具，更是您的阅读伴侣。",
+                footerTag: "UpRead: Reading Beyond Translation."
+            }
+        };
+
+        let currentLang = 'en'; // Changed default to English
+        let cognitiveChart, effortChart;
+
+        function updateContent() {
+            const content = i18n[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (content[key]) el.innerHTML = content[key];
+            });
+            document.getElementById('heroTitle').innerHTML = content.heroTitle;
+            updateCharts();
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('cognitiveChart').getContext('2d');
+            cognitiveChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['0', '5', '10', '15', '20', '25', '30'],
+                    datasets: [
+                        {
+                            label: i18n[currentLang].chart1Label1,
+                            data: [100, 60, 35, 50, 20, 35, 10],
+                            borderColor: '#e7a59a',
+                            backgroundColor: 'rgba(231, 165, 154, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: i18n[currentLang].chart1Label2,
+                            data: [100, 96, 94, 92, 91, 89, 87],
+                            borderColor: '#8b9d77',
+                            backgroundColor: 'rgba(139, 157, 119, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: {
+                        y: { min: 0, max: 110, ticks: { display: false }, title: { display: true, text: i18n[currentLang].chartY } },
+                        x: { title: { display: true, text: i18n[currentLang].chartX } }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('effortChart').getContext('2d');
+            effortChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: [i18n[currentLang].effort1, i18n[currentLang].effort2, i18n[currentLang].effort3],
+                    datasets: [{
+                        data: [50, 35, 15],
+                        backgroundColor: ['#5c4033', '#8b9d77', '#e2d6c8'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function updateCharts() {
+            if (!cognitiveChart) return;
+            cognitiveChart.data.datasets[0].label = i18n[currentLang].chart1Label1;
+            cognitiveChart.data.datasets[1].label = i18n[currentLang].chart1Label2;
+            cognitiveChart.options.scales.x.title.text = i18n[currentLang].chartX;
+            cognitiveChart.options.scales.y.title.text = i18n[currentLang].chartY;
+            cognitiveChart.update();
+
+            effortChart.data.labels = [i18n[currentLang].effort1, i18n[currentLang].effort2, i18n[currentLang].effort3];
+            effortChart.update();
+        }
+
+        document.getElementById('langToggle').addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateContent();
+        });
+
+        window.onload = () => {
+            initCharts();
+            updateContent();
+        };
+    </script>
+</body>
+</html>
